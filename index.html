@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APSIP - Aplikasi Pengelolaan Sistem Informasi Persuratan</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#1f2937}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0b5cab,#123b70)}
+.login-box{width:390px;background:white;border-radius:18px;padding:34px;box-shadow:0 20px 50px #0004;text-align:center}
+.logo{width:70px;height:70px;border-radius:16px;background:#0b5cab;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;margin:auto auto 15px}
+.login h1{margin:8px 0 5px}.login p{color:#6b7280;margin-bottom:25px}
+input,select{width:100%;padding:12px;border:1px solid #d5dce5;border-radius:9px;margin:7px 0 13px;font-size:14px}
+button{border:0;border-radius:9px;padding:11px 17px;background:#0b5cab;color:#fff;cursor:pointer;font-weight:600}
+button:hover{opacity:.9}.app{display:none}.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#0b3564;color:white;padding:24px 15px}
+.brand{font-size:21px;font-weight:bold;padding:0 12px 28px}.brand small{display:block;font-size:11px;font-weight:normal;opacity:.7;margin-top:4px}
+.menu{padding:11px 14px;margin:5px 0;border-radius:8px;cursor:pointer;color:#dce9f8}.menu:hover,.menu.active{background:#1769b0;color:white}
+.main{margin-left:245px}.top{height:72px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 30px}
+.content{padding:28px}.page{display:none}.page.active{display:block}.title{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.title h2{margin:0}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}.card{background:white;border-radius:13px;padding:20px;box-shadow:0 3px 12px #102a430d}.card .num{font-size:28px;font-weight:bold;margin-top:8px}.muted{color:#6b7280;font-size:13px}
+.tablebox{background:white;border-radius:13px;padding:20px;overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:13px 10px;text-align:left;border-bottom:1px solid #edf0f4;font-size:13px}th{background:#f8fafc}
+.badge{padding:5px 9px;border-radius:20px;font-size:11px;background:#e8f2ff;color:#0b5cab}.green{background:#e9f8ef;color:#16803c}.yellow{background:#fff6df;color:#9a6800}
+.actions{display:flex;gap:8px}.btn2{background:#eef4fb;color:#0b5cab}.btn-danger{background:#feecec;color:#c53030}
+.search{max-width:300px}.modal{display:none;position:fixed;inset:0;background:#0006;align-items:center;justify-content:center}.modal.show{display:flex}.modalbox{background:white;width:500px;max-width:94%;padding:25px;border-radius:15px}.modalbox h3{margin-top:0}
+@media(max-width:850px){.sidebar{width:70px}.brand{font-size:0}.brand small{display:none}.menu{font-size:0;text-align:center}.menu::first-letter{font-size:20px}.main{margin-left:70px}.cards{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+<div class="login-box">
+<div class="logo">A</div><h1>APSIP</h1><p>Aplikasi Pengelolaan Sistem Informasi Persuratan</p>
+<input id="username" placeholder="Username" value="admin">
+<input id="password" type="password" placeholder="Password" value="admin123">
+<button style="width:100%" onclick="login()">Masuk ke Sistem</button>
+<p style="font-size:12px;margin-top:18px">Demo: admin / admin123</p>
+</div></div>
+
+<div class="app" id="app">
+<aside class="sidebar">
+<div class="brand">APSIP <small>Sistem Informasi Persuratan & Arsip</small></div>
+<div class="menu active" onclick="showPage('dashboard',this)">🏠 &nbsp; Dashboard</div>
+<div class="menu" onclick="showPage('masuk',this)">📥 &nbsp; Surat Masuk</div>
+<div class="menu" onclick="showPage('keluar',this)">📤 &nbsp; Surat Keluar</div>
+<div class="menu" onclick="showPage('arsip',this)">📁 &nbsp; Arsip Dokumen</div>
+<div class="menu" onclick="showPage('pegawai',this)">👥 &nbsp; Data Pegawai</div>
+<div class="menu" onclick="showPage('laporan',this)">📊 &nbsp; Laporan</div>
+<div class="menu" onclick="logout()" style="margin-top:25px">🚪 &nbsp; Keluar</div>
+</aside>
+<main class="main">
+<header class="top"><b id="pageTitle">Dashboard</b><span>👤 Admin</span></header>
+<section class="content">
+
+<div class="page active" id="dashboard">
+<div class="title"><div><h2>Dashboard</h2><span class="muted">Ringkasan data APSIP</span></div></div>
+<div class="cards">
+<div class="card">📥 Surat Masuk<div class="num" id="countMasuk">24</div><span class="muted">Dokumen tercatat</span></div>
+<div class="card">📤 Surat Keluar<div class="num" id="countKeluar">18</div><span class="muted">Dokumen tercatat</span></div>
+<div class="card">📁 Arsip<div class="num">42</div><span class="muted">Dokumen tersimpan</span></div>
+<div class="card">👥 Pegawai<div class="num">16</div><span class="muted">Pengguna/pegawai</span></div>
+</div><br>
+<div class="tablebox"><h3>Aktivitas Terbaru</h3><table><tr><th>Tanggal</th><th>Aktivitas</th><th>Status</th></tr>
+<tr><td>16 Sep 2026</td><td>Surat masuk baru ditambahkan</td><td><span class="badge green">Selesai</span></td></tr>
+<tr><td>16 Sep 2026</td><td>Arsip dokumen diperbarui</td><td><span class="badge">Diproses</span></td></tr>
+<tr><td>15 Sep 2026</td><td>Surat keluar dibuat</td><td><span class="badge green">Selesai</span></td></tr></table></div>
+</div>
+
+<div class="page" id="masuk"><div class="title"><h2>Surat Masuk</h2><button onclick="openModal('Surat Masuk')">+ Tambah Surat</button></div>
+<div class="tablebox"><input class="search" onkeyup="filterTable(this,'tableMasuk')" placeholder="🔍 Cari surat..."><table id="tableMasuk"><tr><th>No</th><th>Nomor Surat</th><th>Pengirim</th><th>Tanggal</th><th>Perihal</th><th>Status</th><th>Aksi</th></tr>
+<tr><td>1</td><td>001/SM/2026</td><td>BPKAD Provinsi</td><td>16-09-2026</td><td>Undangan Rapat</td><td><span class="badge green">Diterima</span></td><td class="actions"><button class="btn2">Lihat</button></td></tr>
+<tr><td>2</td><td>017/SM/2026</td><td>Kecamatan</td><td>15-09-2026</td><td>Permohonan Data</td><td><span class="badge yellow">Diproses</span></td><td><button class="btn2">Lihat</button></td></tr></table></div></div>
+
+<div class="page" id="keluar"><div class="title"><h2>Surat Keluar</h2><button onclick="openModal('Surat Keluar')">+ Buat Surat</button></div>
+<div class="tablebox"><input class="search" onkeyup="filterTable(this,'tableKeluar')" placeholder="🔍 Cari surat..."><table id="tableKeluar"><tr><th>No</th><th>Nomor Surat</th><th>Tujuan</th><th>Tanggal</th><th>Perihal</th><th>Status</th></tr>
+<tr><td>1</td><td>025/SK/2026</td><td>Inspektorat</td><td>16-09-2026</td><td>Pengiriman Dokumen</td><td><span class="badge green">Terkirim</span></td></tr>
+<tr><td>2</td><td>024/SK/2026</td><td>OPD terkait</td><td>14-09-2026</td><td>Undangan</td><td><span class="badge">Draft</span></td></tr></table></div></div>
+
+<div class="page" id="arsip"><div class="title"><h2>Arsip Dokumen</h2><button onclick="openModal('Arsip Dokumen')">+ Tambah Arsip</button></div>
+<div class="tablebox"><input class="search" onkeyup="filterTable(this,'tableArsip')" placeholder="🔍 Cari arsip..."><table id="tableArsip"><tr><th>No</th><th>Nama Dokumen</th><th>Kategori</th><th>Tahun</th><th>Format</th><th>Aksi</th></tr>
+<tr><td>1</td><td>Laporan Keuangan 2026</td><td>Keuangan</td><td>2026</td><td>PDF</td><td><button class="btn2">Buka</button></td></tr>
+<tr><td>2</td><td>Renja OPD 2026</td><td>Perencanaan</td><td>2026</td><td>PDF</td><td><button class="btn2">Buka</button></td></tr></table></div></div>
+
+<div class="page" id="pegawai"><div class="title"><h2>Data Pegawai</h2><button onclick="openModal('Data Pegawai')">+ Tambah Pegawai</button></div>
+<div class="tablebox"><table><tr><th>No</th><th>Nama</th><th>NIP</th><th>Jabatan</th><th>Status</th></tr>
+<tr><td>1</td><td>Admin APSIP</td><td>—</td><td>Administrator</td><td><span class="badge green">Aktif</span></td></tr>
+<tr><td>2</td><td>Pegawai OPD</td><td>—</td><td>Pengelola Arsip</td><td><span class="badge green">Aktif</span></td></tr></table></div></div>
+
+<div class="page" id="laporan"><div class="title"><h2>Laporan</h2></div><div class="cards">
+<div class="card"><b>Laporan Surat Masuk</b><p class="muted">Rekap surat masuk berdasarkan periode.</p><button onclick="alert('Fitur cetak laporan demo')">Cetak Laporan</button></div>
+<div class="card"><b>Laporan Surat Keluar</b><p class="muted">Rekap surat keluar berdasarkan periode.</p><button onclick="alert('Fitur cetak laporan demo')">Cetak Laporan</button></div>
+<div class="card"><b>Laporan Arsip</b><p class="muted">Daftar dokumen yang tersimpan.</p><button onclick="alert('Fitur cetak laporan demo')">Cetak Laporan</button></div>
+</div></div>
+</section></main></div>
+
+<div class="modal" id="modal"><div class="modalbox"><h3 id="modalTitle">Tambah Data</h3><input placeholder="Nomor / Nama Dokumen"><input placeholder="Perihal / Keterangan"><input type="date"><div style="text-align:right"><button class="btn2" onclick="closeModal()">Batal</button> <button onclick="saveDemo()">Simpan</button></div></div></div>
+
+<script>
+function login(){if(document.getElementById('username').value==='admin'&&document.getElementById('password').value==='admin123'){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block'}else alert('Username atau password salah')}
+function logout(){document.getElementById('app').style.display='none';document.getElementById('login').style.display='flex'}
+function showPage(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.menu').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('pageTitle').textContent=el.textContent.trim().replace(/^[^\w]+/,'')}
+function openModal(t){document.getElementById('modalTitle').textContent='Tambah '+t;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function saveDemo(){alert('Data berhasil disimpan (mode demo).');closeModal()}
+function filterTable(input,id){let q=input.value.toLowerCase();document.querySelectorAll('#'+id+' tr').forEach((r,i)=>{if(i>0)r.style.display=r.textContent.toLowerCase().includes(q)?'':'none'})}
+</script>
+</body></html>
